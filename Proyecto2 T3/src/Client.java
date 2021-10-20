@@ -15,6 +15,8 @@ public class Client {
 
     public Client(Socket socket, String username){
         try {
+            this.username = username;
+            System.out.println(username + " Porfavor escribe tu operacion :)");
 
             Server.kitkat();
 
@@ -23,7 +25,8 @@ public class Client {
             this.dataOutputStream=new DataOutputStream(socket.getOutputStream());
             //Reader
             this.dataInputStream=new DataInputStream(socket.getInputStream());
-            this.username = username;
+            new Client(this.socket, this.username);
+
 
 
         }catch (IOException e){
@@ -34,8 +37,7 @@ public class Client {
 
     public void sendMessages(){
         try{
-            dataOutputStream.write(Integer.parseInt(username));
-            System.out.println(username);
+            //dataOutputStream.write(Integer.parseInt(username));
             dataOutputStream.flush();
 
             Scanner scanner = new Scanner(System.in);

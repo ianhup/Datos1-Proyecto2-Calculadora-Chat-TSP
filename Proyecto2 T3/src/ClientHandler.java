@@ -21,7 +21,7 @@ public class ClientHandler implements Runnable {
             //Reader
             this.dataInputStream=new DataInputStream(socket.getInputStream());
             this.clientUsername = dataInputStream.readLine();
-            clientHandlers.add(this);
+            //clientHandlers.add(this);
             broadcastMessage("SERVER: " + clientUsername + "enter");
         } catch (IOException e){
             closeEverything(socket, dataInputStream,dataOutputStream);

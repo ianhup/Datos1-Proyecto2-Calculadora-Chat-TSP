@@ -51,9 +51,8 @@ public class Server {
         ShuntingYard sy = null;
         try {
             sy = new ShuntingYard(myString);
-        } catch (ParentesisAperturaException e) {
+        } catch (ParentesisAperturaException | ParentesisCierreException e) {
             e.printStackTrace();
-        } catch (ParentesisCierreException e) {
             e.printStackTrace();
         }
         ArrayList<String> prefija = sy.getPrefija();

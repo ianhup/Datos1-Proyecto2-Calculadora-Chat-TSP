@@ -11,6 +11,7 @@ public class Server {
     private Stack<String> pila;
 
     private ServerSocket serverSocket;
+    public Client socket;
 
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -72,10 +73,13 @@ public class Server {
 
 
     public static void main(String[] args) throws IOException {
-
         ServerSocket serverSocket = new ServerSocket(1234);
+        new Client().setVisible(true);
+        System.out.println("lol");
         Server server = new Server(serverSocket);
         server.startServer();
+
+
 
     }
 }

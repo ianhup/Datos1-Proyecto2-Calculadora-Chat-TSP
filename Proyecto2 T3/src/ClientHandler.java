@@ -14,6 +14,10 @@ public class ClientHandler implements Runnable {
     private String clientUsername;
 
     public  ClientHandler(Socket socket){
+        /**
+         * Se encarga de la comunicación client server prioritizando al cliente
+         * @autor Ian Hu
+         */
         try {
             this.socket = socket;
             //Writer
@@ -79,5 +83,6 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
         }
     }
+
 
 }

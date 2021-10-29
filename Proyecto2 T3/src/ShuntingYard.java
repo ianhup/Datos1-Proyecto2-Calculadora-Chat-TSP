@@ -9,6 +9,11 @@ public class ShuntingYard {
     private ArrayList<String> tokens;
 
     public ShuntingYard(String operacion) throws ParentesisAperturaException, ParentesisCierreException {
+        /**
+         * Algoritmo Shunting yard de Dijkstra
+         * @param Un string que contenga una operación
+         * @autor Isa Córdoba
+         */
         this.operacion = operacion;
         prefija = new ArrayList<>();
         this.tokens = new ArrayList<>();
@@ -17,6 +22,10 @@ public class ShuntingYard {
     }
 
     private void tokenizar() {
+        /**
+         * Función que interpreta los simbolos de una ecuación al transformarlos en tokens
+         * @autor Isa Córdoba
+         */
         String patron = "(?<token>[\\(]|\\d+|[-+\\*/%]|[\\)])";
         Pattern pattern = Pattern.compile(patron);
         Matcher matcher = pattern.matcher(this.operacion);
@@ -28,6 +37,9 @@ public class ShuntingYard {
     }
 
     public void shuntingYard() throws ParentesisCierreException, ParentesisAperturaException {
+        /**
+         * Función que la transforma en in-fija para volverla a pos-fija
+         */
         String token;
         int contador = 0;
         Stack<String> pila = new Stack();

@@ -11,6 +11,10 @@ public class RPN {
     }
 
     public double rpn() throws ElementoFaltante {
+        /**
+         * Vuelve a notación pos-fija y calcula el resultado
+         * @autor Isa Córdoba
+         */
         String eleDer, eleIzq;
 
         for (String token : prefija){

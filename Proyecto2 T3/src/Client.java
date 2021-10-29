@@ -1,7 +1,6 @@
-
-
 import javax.swing.*;
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -15,29 +14,35 @@ public class Client extends javax.swing.JFrame {
 
     private javax.swing.JButton btnEnviar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea txtTexto;
-    private javax.swing.JTextField txtTextoEnviar;
+    public javax.swing.JTextArea txtTexto;
+    public javax.swing.JTextField txtTextoEnviar;
+    private Server Scanner;
 
-    public Client(){
-        new Client2(this.socket,this.username);
-        initComponents();
+    /**
+     * @autor Ian Hu, Isa Cordoba
+     */
+    public Client() throws IOException {
+        //new Client2(this.socket,this.username);
+        Client2();
+
 
 
     }
 
-    public void Client2(Socket socket, String username){
+    public void Client2() throws IOException {
+        initComponents();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your username for the group chat: ");
+        Socket socket = new Socket("localhost",1234);
+
         try {
-            this.username = username;
-            System.out.println(username + " Porfavor escribe tu operacion :)");
-
-            Server.kitkat();
-
+            System.out.println("Porfavor escribe tu operacion :)");
             this.socket = socket;
             //Writer
             this.dataOutputStream=new DataOutputStream(socket.getOutputStream());
             //Reader
             this.dataInputStream=new DataInputStream(socket.getInputStream());
-            new Client2(this.socket, this.username);
+            new Client2();
 
 
 
@@ -57,6 +62,9 @@ public class Client extends javax.swing.JFrame {
         String mensaje3 = "Porfavor escribe tu operacion :)";
         this.txtTexto.append(mensaje3);
 
+
+
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cliente X");
 
@@ -67,7 +75,13 @@ public class Client extends javax.swing.JFrame {
         btnEnviar.setText("Enviar");
         btnEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarActionPerformed(evt);
+                try {
+                    btnEnviarActionPerformed(evt);
+                } catch (ElementoFaltante e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -96,15 +110,18 @@ public class Client extends javax.swing.JFrame {
                                         .addComponent(txtTextoEnviar))
                                 .addContainerGap())
         );
-
+        setVisible(true);
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
 
 
-    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) throws ElementoFaltante, IOException {//GEN-FIRST:event_btnEnviarActionPerformed
         String mensaje = "\n"+"1: " + this.txtTextoEnviar.getText() + "\n";
         this.txtTexto.append(mensaje);
+        System.out.println(txtTextoEnviar.getText());
+        Server.kitkat();
+        Server.historial();
 
         //gettext se detecte como el shonting x
         //justo despues meter el resultado que se printee despues del shonting x
@@ -113,27 +130,14 @@ public class Client extends javax.swing.JFrame {
 
 
 
-    public static void main(String[] args) throws IOException {
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your username for the group chat: ");
-        String username = scanner.nextLine();
-        Socket socket = new Socket("localhost",1234);
-        Client.Client2 client = new Client2(socket,username);
-        client.listenForMessage();
-        client.sendMessages();
-    }
 
     private static class Client2 {
-        public Client2(Socket socket, String username) {
-        }
         public Socket socket;
         //Writer
         private DataOutputStream dataOutputStream;
         //Reader
         private DataInputStream dataInputStream;
         private String username;
-
         public void sendMessages(){
             try{
                 //dataOutputStream.write(Integer.parseInt(username));
@@ -185,4 +189,9 @@ public class Client extends javax.swing.JFrame {
             }
         }
     }
+
+    public static void main(String[] args) throws IOException, ElementoFaltante {
+        Server.getInstance();
+    }
+
 }

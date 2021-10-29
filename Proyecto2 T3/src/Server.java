@@ -1,22 +1,31 @@
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Stack;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class Server {
     private ArrayList<String> prefija;
     private Stack<String> pila;
-
+    public static String historypath = "Historial.csv";
+    public static BufferedWriter writer;
+    public static FileWriter fw;
+    public static List<String> list;
     private ServerSocket serverSocket;
     public Client socket;
-
+    private Client Scanner;
+    public static Client instance = null;
+    public static RPN r;
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
+    /**
+     * @autor Ian Hu, Isa Cordoba
+     */
     public void startServer(){
         try {
 
@@ -46,9 +55,9 @@ public class Server {
         }
     }
 
-    public static void kitkat()  {
-        Scanner input = new Scanner(System.in);
-        String myString=input.next();
+    public static void kitkat() throws ElementoFaltante, IOException {
+        System.out.println(getInstance().txtTextoEnviar.getText());
+        String myString=getInstance().txtTextoEnviar.getText();
         ShuntingYard sy = null;
         try {
             sy = new ShuntingYard(myString);
@@ -62,24 +71,54 @@ public class Server {
             System.out.print(string+ " ");
         }
 
-        RPN r = new RPN(prefija);
+        r = new RPN(prefija);
         try {
             System.out.println("\nResultado: "+r.rpn());
+            getInstance().txtTexto.append("Resultado: " + String.valueOf(r.rpn()));
         } catch (ElementoFaltante e) {
             e.printStackTrace();
         }
 
     }
+    public static Client getInstance() throws ElementoFaltante, IOException {
+        if(instance == null){
+            instance = new Client();
+        }
+        return instance;
+    }
+    public static void historial(){
+        list= new LinkedList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        String formatDatetime = now.format(formatter);
+        list.add(formatDatetime);
+        System.out.println(list);
+        System.out.println(formatDatetime);
+        try {
+            fw = new FileWriter(historypath, true);
+            writer = new BufferedWriter(fw);
 
+            for (String str : list) {
+                writer.write(str + ", "+getInstance().txtTextoEnviar.getText() + ", "+String.valueOf(r.rpn()));
+                writer.newLine();
+                writer.flush();
+            }
 
-    public static void main(String[] args) throws IOException {
+            System.out.println("Done");
+            writer.close();
+            fw.close();
+
+        } catch (IOException | ElementoFaltante e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws IOException, ElementoFaltante {
         ServerSocket serverSocket = new ServerSocket(1234);
-        new Client().setVisible(true);
+        getInstance();
         System.out.println("lol");
         Server server = new Server(serverSocket);
         server.startServer();
-
-
-
     }
+
 }
